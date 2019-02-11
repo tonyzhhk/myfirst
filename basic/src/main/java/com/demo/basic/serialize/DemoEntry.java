@@ -2,12 +2,12 @@ package com.demo.basic.serialize;
 
 import com.alibaba.fastjson.JSON;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 import java.io.*;
 
 /**
  * 序列化demo
+ *
  * @author zhanghk.tony.
  * @date 2019-01-31 14:22
  */
@@ -31,20 +31,15 @@ public class DemoEntry {
             e.printStackTrace();
         }
 
-        // 由于反序列化，会把文件删掉
         File file = new File("tempFile");
-        ObjectInputStream ois = null;
-        try {
-            ois = new ObjectInputStream(new FileInputStream(file));
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
             Family family1 = (Family) ois.readObject();
             System.out.println(JSON.toJSONString(family1));
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            IOUtils.closeQuietly(ois);
             try {
+                // 删除文件
                 FileUtils.forceDelete(file);
             } catch (IOException e) {
                 e.printStackTrace();
